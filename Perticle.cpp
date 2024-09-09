@@ -54,14 +54,17 @@ void Perticle::FadeOut() {
 		alpha_ = 1.0f;
 	}
 
+	// 潰れていなかったら
 	if (worldTransform_.scale_.x > 0.0f) {
 
+		// スケールを小さくする
 		worldTransform_.scale_ -= kSubScale;
 
+	// 潰れたら
 	} else {
 
+		// スケールを元のサイズに戻す
 		worldTransform_.scale_ = {1.0f, 1.0f, 1.0f};
-
 	}
 
 }
