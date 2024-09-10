@@ -7,6 +7,13 @@
 /// パーティクル
 /// </summary>
 class Perticle {
+public:
+	struct Emitter {
+		Vector3 position;
+		Vector3 min;
+		Vector3 max;
+	};
+
 private: // メンバ変数
 	// ワールド変換
 	WorldTransform worldTransform_;
@@ -15,6 +22,12 @@ private: // メンバ変数
 
 	// アルファ値
 	float alpha_ = 1.0f;
+
+	Emitter emitter_{
+	    {0.0f,    0.0f,    0.0f   },
+	    {-100.0f, -100.0f, -100.0f},
+	    {100.0f,  100.0f,  100.0f },
+	};
 
 public: // メンバ関数
 	/// <summary>
@@ -35,4 +48,12 @@ public: // メンバ関数
 	/// 徐々に消える
 	/// </summary>
 	void FadeOut();
+	/// <summary>
+	/// エミッターのどこに出るか
+	/// </summary>
+	void Pop();
+	/// <summary>
+	/// 動き
+	/// </summary>
+	void Move();
 };

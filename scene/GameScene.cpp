@@ -19,15 +19,8 @@ void GameScene::Initialize() {
 
 	// パーティクルモデル
 	modelperticle_.reset(Model::CreateFromOBJ("perticle", false));
-
-	for (int i = 0; i < 3; i++) {
-		// パーティクル生成
-		std::unique_ptr<Perticle> newPerticle = std::make_unique<Perticle>();
-		// パーティクル初期化
-		newPerticle->Initialize(modelperticle_.get(), {(float)i * 10.0f, (float)i * 10.0f, (float)i * 10.0f});
-		// パーティクルを登録する
-		perticles_.push_back(std::move(newPerticle));
-	}
+	// パーティクルを発生させる
+	PerticlePop();
 }
 
 void GameScene::Update() {
@@ -91,4 +84,16 @@ void GameScene::Draw() {
 	Sprite::PostDraw();
 
 #pragma endregion
+}
+
+void GameScene::PerticlePop() {
+
+	for (int i = 0; i < 3; i++) {
+		// パーティクル生成
+		std::unique_ptr<Perticle> newPerticle = std::make_unique<Perticle>();
+		// パーティクル初期化
+		newPerticle->Initialize(modelperticle_.get(), {(float)i * 10.0f, (float)i * 10.0f, (float)i * 10.0f});
+		// パーティクルを登録する
+		perticles_.push_back(std::move(newPerticle));
+	}
 }

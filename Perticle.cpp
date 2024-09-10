@@ -1,6 +1,7 @@
 #include "Perticle.h"
 #include <imgui.h>
 #include "MathVector.h"
+#include <random>
 
 void Perticle::Initialize(Model* model,Vector3 position) {
 
@@ -68,3 +69,19 @@ void Perticle::FadeOut() {
 	}
 
 }
+
+void Perticle::Pop() {
+
+	std::random_device rd;
+	std::mt19937 gen(rd());
+
+	// 実数の乱数生成器
+	std::uniform_real_distribution<> distX(emitter_.min.x, emitter_.max.x);
+	std::uniform_real_distribution<> distX(emitter_.min.x, emitter_.max.x);
+	std::uniform_real_distribution<> distX(emitter_.min.x, emitter_.max.x);
+
+	// 乱数を生成して表示
+	double random_number = dist(gen);
+}
+
+void Perticle::Move() {}
