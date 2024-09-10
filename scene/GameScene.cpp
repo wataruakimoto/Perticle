@@ -88,11 +88,11 @@ void GameScene::Draw() {
 
 void GameScene::PerticlePop() {
 
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < 12; i++) {
 		// パーティクル生成
 		std::unique_ptr<Perticle> newPerticle = std::make_unique<Perticle>();
 		// パーティクル初期化
-		newPerticle->Initialize(modelperticle_.get(), {(float)i * 10.0f, (float)i * 10.0f, (float)i * 10.0f});
+		newPerticle->Initialize(modelperticle_.get(), { 20.0f,20.0f,20.0f });
 		// パーティクルを登録する
 		perticles_.push_back(std::move(newPerticle));
 	}

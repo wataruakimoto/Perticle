@@ -24,9 +24,9 @@ private: // メンバ変数
 	float alpha_ = 1.0f;
 
 	Emitter emitter_{
-	    {0.0f,    0.0f,    0.0f   },
-	    {-100.0f, -100.0f, -100.0f},
-	    {100.0f,  100.0f,  100.0f },
+		{0.0f, 0.0f, 0.0f},
+		{-10.0f, -10.0f, -10.0f},
+		{10.0f, 10.0f, 10.0f},
 	};
 
 public: // メンバ関数
@@ -51,7 +51,8 @@ public: // メンバ関数
 	/// <summary>
 	/// エミッターのどこに出るか
 	/// </summary>
-	void Pop();
+	/// <returns></returns>
+	Vector3 Pop(const Vector3& min, const Vector3& max);
 	/// <summary>
 	/// 動き
 	/// </summary>

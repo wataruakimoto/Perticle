@@ -7,11 +7,13 @@ void Perticle::Initialize(Model* model,Vector3 position) {
 
 	// 引数をメンバ変数に代入
 	model_ = model;
-	worldTransform_.translation_ = position;
+	emitter_.position = position;
+	emitter_.min += emitter_.position;
+	emitter_.max += emitter_.position;
+	worldTransform_.translation_ = Pop(emitter_.min, emitter_.max);
 
 	// ワールド変換初期化
 	worldTransform_.Initialize();
-
 }
 
 void Perticle::Update() {
@@ -23,6 +25,12 @@ void Perticle::Update() {
 
 	// ワールド変換更新
 	worldTransform_.UpdateMatrix();
+
+	ImGui::Begin("emitter");
+	ImGui::DragFloat3("position", &emitter_.position.x, 0.01f);
+	ImGui::DragFloat3("min", &emitter_.min.x, 0.01f);
+	ImGui::DragFloat3("max", &emitter_.max.x, 0.01f);
+	ImGui::End();
 
 	ImGui::Begin("Perticle");
 	ImGui::DragFloat3("Scale", &worldTransform_.scale_.x, 0.01f);
@@ -70,18 +78,17 @@ void Perticle::FadeOut() {
 
 }
 
-void Perticle::Pop() {
+Vector3 Perticle::Pop(const Vector3& min, const Vector3& max) {
 
 	std::random_device rd;
 	std::mt19937 gen(rd());
 
-	// 実数の乱数生成器
-	std::uniform_real_distribution<> distX(emitter_.min.x, emitter_.max.x);
-	std::uniform_real_distribution<> distX(emitter_.min.x, emitter_.max.x);
-	std::uniform_real_distribution<> distX(emitter_.min.x, emitter_.max.x);
+	// float型の数字をランダムに生成
+	std::uniform_real_distribution<float> distX(min.x, max.x);
+	std::uniform_real_distribution<float> distY(min.y, max.y);
+	std::uniform_real_distribution<float> distZ(min.z, max.z);
 
-	// 乱数を生成して表示
-	double random_number = dist(gen);
+	return Vector3(distX(gen), distY(gen), distZ(gen));
 }
 
 void Perticle::Move() {}
