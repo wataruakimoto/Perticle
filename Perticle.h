@@ -7,27 +7,20 @@
 /// パーティクル
 /// </summary>
 class Perticle {
-public:
-	struct Emitter {
-		Vector3 position;
-		Vector3 min;
-		Vector3 max;
-	};
-
 private: // メンバ変数
 	// ワールド変換
 	WorldTransform worldTransform_;
 	// モデルデータ
 	Model* model_;
 
-	// アルファ値
-	float alpha_ = 1.0f;
+	// 飛んでいく向き
+	Vector3 speed_;
 
-	Emitter emitter_{
-		{0.0f, 0.0f, 0.0f},
-		{-10.0f, -10.0f, -10.0f},
-		{10.0f, 10.0f, 10.0f},
-	};
+	Vector3 min_ = {-0.1f, -0.1f, -0.1f};
+	Vector3 max_ = {0.1f, 0.1f, 0.1f};
+
+	// 削除フラグ
+	bool isDead_ = false;
 
 public: // メンバ関数
 	/// <summary>
@@ -49,12 +42,19 @@ public: // メンバ関数
 	/// </summary>
 	void FadeOut();
 	/// <summary>
-	/// エミッターのどこに出るか
-	/// </summary>
-	/// <returns></returns>
-	Vector3 Pop(const Vector3& min, const Vector3& max);
-	/// <summary>
 	/// 動き
 	/// </summary>
 	void Move();
+	/// <summary>
+	/// 死亡フラグのゲッター
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsDead() { return isDead_; }
+	/// <summary>
+	/// 飛んでいく向きを設定する
+	/// </summary>
+	/// <param name="min">最小値</param>
+	/// <param name="max">最大値</param>
+	/// <returns></returns>
+	Vector3 SetDirection(const Vector3& min, const Vector3& max);
 };

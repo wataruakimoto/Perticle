@@ -9,6 +9,8 @@
 #include "WorldTransform.h"
 #include "memory"
 #include "Perticle.h"
+#include "Emitter.h"
+#include "DebugCamera.h"
 
 /// <summary>
 /// ゲームシーン
@@ -44,7 +46,7 @@ public: // メンバ関数
 	/// <summary>
 	/// パーティクル発生
 	/// </summary>
-	void PerticlePop();
+	void PerticlePop(const Vector3& position_);
 
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
@@ -60,6 +62,13 @@ private: // メンバ変数
 	std::list<std::unique_ptr<Perticle>> perticles_;
 	// パーティクル用モデルデータ
 	std::unique_ptr<Model> modelperticle_;
+
+	Vector3 position = {0.0f, 0.0f, 0.0f};
+
+	// デバッグカメラ
+	std::unique_ptr<DebugCamera> debugCamera_;
+	// デバッグカメラのフラグ
+	bool isDebugCameraActive_ = false;
 
 	/// <summary>
 	/// ゲームシーン用
