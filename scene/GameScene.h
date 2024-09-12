@@ -8,6 +8,7 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include "memory"
+#include "Star.h"
 #include "Perticle.h"
 #include "Emitter.h"
 #include "Stage.h"
@@ -48,7 +49,7 @@ public: // メンバ関数
 	/// <summary>
 	/// パーティクル発生
 	/// </summary>
-	void PerticlePop(const Vector3& position_);
+	void PerticlePop(const Vector3& position_, const std::unique_ptr<Model>& model, const int& perticleNum);
 
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
@@ -60,12 +61,19 @@ private: // メンバ変数
 	// ワールド変換
 	WorldTransform worldTransform_;
 
+	// スター
+	std::unique_ptr<Star>star_;
+	// スター用モデルデータ
+	std::unique_ptr<Model> modelStar_;
+	// スターの初期位置
+	Vector3 starPosition_ = { 0.0f,16.0f,20.0f };
+
 	// パーティクル(リスト)
 	std::list<std::unique_ptr<Perticle>> perticles_;
 	// パーティクル用モデルデータ
-	std::unique_ptr<Model> modelperticle_;
+	std::unique_ptr<Model> modelPerticle_;
 	// エミッターの初期位置
-	Vector3 emitterPosition_ = {0.0f, 0.0f, 0.0f};
+	Vector3 emitterPosition_ = { 0.0f, 16.0f, 0.0f };
 
 	// ステージ
 	std::unique_ptr<Stage> stage_;

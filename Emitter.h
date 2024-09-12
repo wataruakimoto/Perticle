@@ -12,8 +12,8 @@ class Perticle;
 class Emitter {
 private: // メンバ変数
 	Vector3 position_;
-	Vector3 min_ = {-1.0f, -1.0f, -1.0f};
-	Vector3 max_ = {1.0f, 1.0f, 1.0f};
+	Vector3 min_ = {-2.0f, -2.0f, -2.0f};
+	Vector3 max_ = {2.0f, 2.0f, 2.0f};
 
 public: // メンバ関数
 	

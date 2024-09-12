@@ -13,18 +13,25 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
-	viewProjection_.translation_ = {0.0f, 5.0f, -10.0f};
+	viewProjection_.translation_ = {0.0f, 19.0f, -30.0f};
 
 	// ビュープロジェクション初期化
 	viewProjection_.Initialize();
 	// ワールド変換初期化
 	worldTransform_.Initialize();
 
+	// スターモデル
+	modelStar_.reset(Model::CreateFromOBJ("MyResources/star1", false));
+	// スター生成
+	star_ = std::make_unique<Star>();
+	// スター初期化
+	star_->Initialize(modelStar_.get(), starPosition_);
+
 	// パーティクルモデル
-	modelperticle_.reset(Model::CreateFromOBJ("MyResources/piece2", false));
+	modelPerticle_.reset(Model::CreateFromOBJ("MyResources/piece1", false));
 
 	// ステージモデル
-	modelStage_.reset(Model::CreateFromOBJ("MyResources/saturn", true));
+	modelStage_.reset(Model::CreateFromOBJ("MyResources/mars", true));
 	// ステージ生成
 	stage_ = std::make_unique<Stage>();
 	// ステージ初期化
@@ -43,6 +50,9 @@ void GameScene::Initialize() {
 
 void GameScene::Update() {
 
+	// スター更新
+	star_->Update();
+
 	// キー入力によってエミッターの位置を更新
 	if (input_->PushKey(DIK_UP)) {
 		emitterPosition_.y += 0.1f; // 上に移動
@@ -53,7 +63,7 @@ void GameScene::Update() {
 
 	if (input_->TriggerKey(DIK_SPACE)) {
 		// パーティクルを発生させる
-		PerticlePop(emitterPosition_);
+		PerticlePop(emitterPosition_, modelPerticle_, 24);
 	}
 
 	// パーティクル更新
@@ -142,6 +152,9 @@ void GameScene::Draw() {
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
 
+	// スター更新
+	star_->Draw(viewProjection_);
+
 	// パーティクル描画
 	for (std::unique_ptr<Perticle>& perticle : perticles_) {
 		perticle->Draw(viewProjection_);
@@ -171,12 +184,12 @@ void GameScene::Draw() {
 #pragma endregion
 }
 
-void GameScene::PerticlePop(const Vector3& position_) {
+void GameScene::PerticlePop(const Vector3& position_, const std::unique_ptr<Model>& model, const int& perticleNum) {
 
 	// エミッターを作成
 	std::unique_ptr<Emitter> newEmitter = std::make_unique<Emitter>();
 	// エミッター初期化
 	newEmitter->SetPosition(position_);
 	// エミッターからパーティクルを作成
-	newEmitter->Emit(perticles_, modelperticle_.get(), 24);
+	newEmitter->Emit(perticles_, model.get(), perticleNum);
 }
