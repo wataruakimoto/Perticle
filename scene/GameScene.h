@@ -10,6 +10,8 @@
 #include "memory"
 #include "Perticle.h"
 #include "Emitter.h"
+#include "Stage.h"
+#include "Skydome.h"
 #include "DebugCamera.h"
 
 /// <summary>
@@ -62,8 +64,22 @@ private: // メンバ変数
 	std::list<std::unique_ptr<Perticle>> perticles_;
 	// パーティクル用モデルデータ
 	std::unique_ptr<Model> modelperticle_;
+	// エミッターの初期位置
+	Vector3 emitterPosition_ = {0.0f, 0.0f, 0.0f};
 
-	Vector3 position = {0.0f, 0.0f, 0.0f};
+	// ステージ
+	std::unique_ptr<Stage> stage_;
+	// ステージ用モデル
+	std::unique_ptr<Model> modelStage_;
+	// ステージの初期位置
+	Vector3 stagePosition_ = {0.0f, 0.0f, 0.0f};
+
+	// 天球
+	std::unique_ptr<Skydome> skydome_;
+	// 天球用モデル
+	std::unique_ptr<Model> modelSkydome_;
+	// 天球の初期位置
+	Vector3 skydomePosition_ = {0.0f, 0.0f, 0.0f};
 
 	// デバッグカメラ
 	std::unique_ptr<DebugCamera> debugCamera_;

@@ -1,6 +1,7 @@
 #include "GameScene.h"
 #include "TextureManager.h"
 #include <cassert>
+#include <imgui.h>
 
 GameScene::GameScene() {}
 
@@ -12,28 +13,47 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
+	viewProjection_.translation_ = {0.0f, 5.0f, -10.0f};
+
 	// ビュープロジェクション初期化
 	viewProjection_.Initialize();
 	// ワールド変換初期化
 	worldTransform_.Initialize();
 
 	// パーティクルモデル
-	modelperticle_.reset(Model::CreateFromOBJ("piece2", false));
+	modelperticle_.reset(Model::CreateFromOBJ("MyResources/piece2", false));
+
+	// ステージモデル
+	modelStage_.reset(Model::CreateFromOBJ("MyResources/saturn", true));
+	// ステージ生成
+	stage_ = std::make_unique<Stage>();
+	// ステージ初期化
+	stage_->Initialize(modelStage_.get(), stagePosition_);
+
+	// 天球モデル
+	modelSkydome_.reset(Model::CreateFromOBJ("MyResources/skydome", true));
+	// 天球生成
+	skydome_ = std::make_unique<Skydome>();
+	// 天球初期化
+	skydome_->Initialize(modelSkydome_.get(), skydomePosition_);
+
+	// デバッグカメラの生成と初期化
+	debugCamera_ = std::make_unique<DebugCamera>(1280, 720);
 }
 
 void GameScene::Update() {
 
 	// キー入力によってエミッターの位置を更新
 	if (input_->PushKey(DIK_UP)) {
-		position.y += 0.1f; // 上に移動
+		emitterPosition_.y += 0.1f; // 上に移動
 	}
 	if (input_->PushKey(DIK_DOWN)) {
-		position.y += -0.1f; // 下に移動
+		emitterPosition_.y += -0.1f; // 下に移動
 	}
 
 	if (input_->TriggerKey(DIK_SPACE)) {
 		// パーティクルを発生させる
-		PerticlePop(position);
+		PerticlePop(emitterPosition_);
 	}
 
 	// パーティクル更新
@@ -51,15 +71,21 @@ void GameScene::Update() {
 		}
 	}
 
+	// ステージ更新
+	stage_->Update();
+
+	// 天球更新
+	skydome_->Update();
+
 	// ビュープロジェクション更新
 	viewProjection_.UpdateMatrix();
 	// ワールド変換更新
 	worldTransform_.UpdateMatrix();
 
-	// デバッグカメラの生成と初期化
-	debugCamera_ = std::make_unique<DebugCamera>(1280, 720);
+	// ビュープロジェクション行列の転送
+	viewProjection_.TransferMatrix();
 
-	#ifdef _DEBUG
+#ifdef _DEBUG
 
 	if (input_->TriggerKey(DIK_C)) {
 		isDebugCameraActive_ = true;
@@ -77,7 +103,16 @@ void GameScene::Update() {
 		viewProjection_.matProjection = debugCamera_->GetProjection();
 		// ビュープロジェクション行列の転送
 		viewProjection_.TransferMatrix();
+
+	} else {
+
+		// ビュープロジェクション行列の更新と転送
+		viewProjection_.UpdateMatrix();
 	}
+
+	ImGui::Begin("ViewProjection");
+	ImGui::DragFloat3("pos", &viewProjection_.translation_.x, 0.01f);
+	ImGui::End();
 }
 
 void GameScene::Draw() {
@@ -111,6 +146,12 @@ void GameScene::Draw() {
 	for (std::unique_ptr<Perticle>& perticle : perticles_) {
 		perticle->Draw(viewProjection_);
 	}
+
+	// ステージ描画
+	stage_->Draw(viewProjection_);
+
+	// 天球描画
+	skydome_->Draw(viewProjection_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
