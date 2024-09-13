@@ -44,6 +44,13 @@ void GameScene::Initialize() {
 	// 天球初期化
 	skydome_->Initialize(modelSkydome_.get(), skydomePosition_);
 
+	// マークモデル
+	modelMark_.reset(Model::CreateFromOBJ("MyResources/mark", false));
+	// マーク生成
+	mark_ = std::make_unique<Mark>();
+	// マーク初期化
+	mark_->Initialize(modelMark_.get(), markPosition_);
+
 	// デバッグカメラの生成と初期化
 	debugCamera_ = std::make_unique<DebugCamera>(1280, 720);
 }
@@ -86,6 +93,9 @@ void GameScene::Update() {
 
 	// 天球更新
 	skydome_->Update();
+
+	// マーク更新
+	mark_->Update();
 
 	// ビュープロジェクション更新
 	viewProjection_.UpdateMatrix();
@@ -165,6 +175,9 @@ void GameScene::Draw() {
 
 	// 天球描画
 	skydome_->Draw(viewProjection_);
+
+	// マーク描画
+	mark_->Draw(viewProjection_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

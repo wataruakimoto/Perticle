@@ -9,7 +9,7 @@ void Perticle::Initialize(Model* model,Vector3 position) {
 	model_ = model;
 	worldTransform_.translation_ = position;
 
-	speed_ = SetDirection(min_, max_);
+	direction_ = SetDirection(min_, max_);
 
 	// ワールド変換初期化
 	worldTransform_.Initialize();
@@ -27,7 +27,7 @@ void Perticle::Update() {
 	ImGui::Begin("Perticle");
 	ImGui::DragFloat3("Scale", &worldTransform_.scale_.x, 0.01f);
 	ImGui::DragFloat3("Translation", &worldTransform_.translation_.x, 0.01f);
-	ImGui::DragFloat3("Speed", &speed_.x, 0.01f);
+	ImGui::DragFloat3("Speed", &direction_.x, 0.01f);
 	ImGui::DragFloat3("Min", &min_.x, 0.01f);
 	ImGui::DragFloat3("Max", &max_.x, 0.01f);
 	ImGui::End();
@@ -58,8 +58,8 @@ void Perticle::FadeOut() {
 
 void Perticle::Move() {
 
-	worldTransform_.rotation_ += speed_;
-	worldTransform_.translation_ += speed_;
+	worldTransform_.rotation_ += direction_;
+	worldTransform_.translation_ += direction_;
 }
 
 Vector3 Perticle::SetDirection(const Vector3& min, const Vector3& max) {

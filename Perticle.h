@@ -14,7 +14,7 @@ private: // メンバ変数
 	Model* model_;
 
 	// 飛んでいく向き
-	Vector3 speed_;
+	Vector3 direction_;
 
 	Vector3 min_ = {-0.1f, -0.1f, -0.1f};
 	Vector3 max_ = {0.1f, 0.1f, 0.1f};
